@@ -32,7 +32,7 @@ final class DeviceResponse implements ApiResponse
     {
         $model = new self();
         $model->tag = $data['tag'] ?? '';
-        $model->devices = $data['devices'] ?? [];
+        $model->devices = $data['device'] ?? $data['devices'] ?? [];
 
         return $model;
     }
