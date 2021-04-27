@@ -32,7 +32,7 @@ final class CountryResponse implements ApiResponse
     {
         $model = new self();
         $model->tag = $data['tag'] ?? '';
-        $model->countries = $data['countries'] ?? [];
+        $model->countries = $data['country'] ?? $data['countries'] ?? [];
 
         return $model;
     }
