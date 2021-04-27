@@ -32,7 +32,7 @@ final class ProviderResponse implements ApiResponse
     {
         $model = new self();
         $model->tag = $data['tag'] ?? '';
-        $model->providers = $data['providers'] ?? [];
+        $model->providers = $data['provider'] ?? $data['providers'] ?? [];
 
         return $model;
     }
