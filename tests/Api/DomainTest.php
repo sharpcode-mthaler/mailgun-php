@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Mailgun\Tests\Api;
 
-use GuzzleHttp\Psr7\Response;
 use Mailgun\Api\Domain;
 use Mailgun\Exception\InvalidArgumentException;
 use Mailgun\Model\Domain\ConnectionResponse;
@@ -28,6 +27,7 @@ use Mailgun\Model\Domain\UpdateCredentialResponse;
 use Mailgun\Model\Domain\UpdateOpenTrackingResponse;
 use Mailgun\Model\Domain\UpdateUnsubscribeTrackingResponse;
 use Mailgun\Model\Domain\VerifyResponse;
+use Nyholm\Psr7\Response;
 
 class DomainTest extends TestCase
 {
@@ -82,6 +82,7 @@ JSON
         $this->setRequestUri('/v3/domains');
         $this->setRequestBody([
             'name' => 'example.com',
+            'web_scheme' => 'http',
         ]);
         $this->setHydrateClass(CreateResponse::class);
 
@@ -96,11 +97,28 @@ JSON
         $this->setRequestBody([
             'name' => 'example.com',
             'smtp_password' => 'foo',
+            'web_scheme' => 'http',
         ]);
         $this->setHydrateClass(CreateResponse::class);
 
         $api = $this->getApiInstance();
         $api->create('example.com', 'foo');
+    }
+
+    public function testCreateWithPoolId()
+    {
+        $this->setRequestMethod('POST');
+        $this->setRequestUri('/v3/domains');
+        $this->setRequestBody([
+            'name' => 'example.com',
+            'smtp_password' => 'foo',
+            'pool_id' => '123',
+            'web_scheme' => 'http',
+        ]);
+        $this->setHydrateClass(CreateResponse::class);
+
+        $api = $this->getApiInstance();
+        $api->create('example.com', 'foo', null, null, null, null, '123');
     }
 
     public function testCreateWithPasswordSpamAction()
@@ -111,6 +129,7 @@ JSON
             'name' => 'example.com',
             'smtp_password' => 'foo',
             'spam_action' => 'bar',
+            'web_scheme' => 'http',
         ]);
         $this->setHydrateClass(CreateResponse::class);
 
@@ -127,6 +146,7 @@ JSON
             'smtp_password' => 'foo',
             'spam_action' => 'bar',
             'wildcard' => 'true',
+            'web_scheme' => 'http',
         ]);
         $this->setHydrateClass(CreateResponse::class);
 
@@ -142,6 +162,7 @@ JSON
             'name' => 'example.com',
             'smtp_password' => 'foo',
             'force_dkim_authority' => 'true',
+            'web_scheme' => 'http',
         ]);
         $this->setHydrateClass(CreateResponse::class);
 
@@ -159,6 +180,7 @@ JSON
             'spam_action' => 'bar',
             'wildcard' => 'true',
             'force_dkim_authority' => 'true',
+            'web_scheme' => 'http',
         ]);
         $this->setHydrateClass(CreateResponse::class);
 
@@ -255,11 +277,27 @@ JSON
             'name' => 'example.com',
             'smtp_password' => 'foo',
             'ips' => '127.0.0.1,127.0.0.2',
+            'web_scheme' => 'http',
         ]);
         $this->setHydrateClass(CreateResponse::class);
 
         $api = $this->getApiInstance();
         $api->create('example.com', 'foo', null, null, null, ['127.0.0.1', '127.0.0.2']);
+    }
+
+    public function testCreateWithWebSchema()
+    {
+        $this->setRequestMethod('POST');
+        $this->setRequestUri('/v3/domains');
+        $this->setRequestBody([
+            'name' => 'example.com',
+            'smtp_password' => 'foo',
+            'web_scheme' => 'https',
+        ]);
+        $this->setHydrateClass(CreateResponse::class);
+
+        $api = $this->getApiInstance();
+        $api->create('example.com', 'foo', null, null, null, null, null, 'https');
     }
 
     public function testTracking()
